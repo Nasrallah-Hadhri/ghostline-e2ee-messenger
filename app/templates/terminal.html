@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}GhostLine{% endblock %}
+{% block body_class %}page-app{% endblock %}
+{% block content %}
+<header class="topbar">
+  <span class="brand">GHOST<span class="dim">LINE</span></span>
+  <span class="stat"><span class="dot" id="link-dot"></span><b id="link-state">connecting</b></span>
+  <span class="stat">signed in as <b id="whoami">…</b></span>
+  <span class="stat">idle lock in <b id="session-timer">--:--</b></span>
+  <nav class="topnav">
+    <button type="button" id="open-palette" title="Command palette">Commands <kbd>Ctrl K</kbd></button>
+    <a href="/admin/" id="nav-admin" hidden>SOC</a>
+    <a href="/profile">Profile</a>
+    <button type="button" id="nav-logout">Sign out</button>
+  </nav>
+  <div class="session-bar" id="session-bar" aria-hidden="true"></div>
+</header>
+
+<div class="app-grid">
+  <aside class="pane pane-contacts" aria-label="Contacts">
+    <div class="pane-head">
+      <input class="search" id="search" type="search" placeholder="Find a handle…" aria-label="Find a handle" autocomplete="off">
+    </div>
+    <div class="pane-body">
+      <ul class="contact-list" id="results" aria-label="Search results"></ul>
+      <p class="label list-label">Channels</p>
+      <ul class="contact-list" id="contacts"><li class="empty">No channels yet.</li></ul>
+    </div>
+  </aside>
+
+  <main class="pane pane-channel" aria-label="Conversation">
+    <div class="pane-head">
+      <div class="channel-peer" id="channel-peer"><span class="label">No channel selected</span></div>
+      <span class="label" id="channel-crypto"></span>
+    </div>
+    <div class="messages" id="messages" aria-live="polite">
+      <div class="empty-channel" id="empty-channel">
+        <h2>Nothing on the wire</h2>
+        <p>Search for a handle on the left, or press <kbd>Ctrl K</kbd>.</p>
+        <p class="muted">Messages are sealed in this browser before they leave it.</p>
+      </div>
+    </div>
+    <form class="compose" id="compose" autocomplete="off">
+      <select id="ttl" aria-label="Self-destruct timer">
+        <option value="">Keep</option>
+        <option value="30">Burn 30s</option>
+        <option value="300">Burn 5m</option>
+        <option value="3600">Burn 1h</option>
+        <option value="86400">Burn 24h</option>
+      </select>
+      <input id="compose-input" type="text" placeholder="Select a channel first" maxlength="4000" disabled aria-label="Message">
+      <button type="submit" class="btn btn-primary" id="send-btn" disabled>Send</button>
+    </form>
+    <div class="compose-meta"><span id="compose-info"></span><span><kbd>Enter</kbd> send · <kbd>Alt ↑↓</kbd> switch channel</span></div>
+  </main>
+
+  <aside class="pane pane-inspector" aria-label="Inspector">
+    <div class="pane-head">
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" id="tab-dossier" aria-selected="true">Contact</button>
+        <button type="button" role="tab" id="tab-packet" aria-selected="false">Packet</button>
+      </div>
+    </div>
+    <div class="pane-body" id="inspector-dossier" role="tabpanel"><p class="empty">Open a channel to see who you are talking to.</p></div>
+    <div class="pane-body" id="inspector-packet" role="tabpanel" hidden><p class="empty">Click a message to inspect its envelope.</p></div>
+  </aside>
+</div>
+
+<footer class="cmdbar">
+  <span class="prompt" id="prompt">~$</span>
+  <input id="cmd" type="text" placeholder="/help" spellcheck="false" autocomplete="off" aria-label="Command line">
+  <span class="hints"><kbd>/</kbd> command line</span>
+</footer>
+
+<div class="overlay" id="palette" hidden>
+  <div class="palette" role="dialog" aria-label="Command palette">
+    <input id="palette-input" type="text" placeholder="Type a command or a handle…" autocomplete="off" spellcheck="false">
+    <ul id="palette-list" role="listbox"></ul>
+  </div>
+</div>
+
+<div class="overlay" id="key-alert" hidden>
+  <div class="modal alert" role="alertdialog" aria-labelledby="key-alert-title">
+    <h2 id="key-alert-title">Key changed</h2>
+    <p id="key-alert-text"></p>
+    <p class="muted">This can mean they reinstalled, or that someone is intercepting the channel. Sending is blocked until you compare the new safety number with them in person or on a call.</p>
+    <div class="actions">
+      <button type="button" class="btn btn-danger" id="key-alert-accept">I verified the new key</button>
+      <button type="button" class="btn" id="key-alert-close">Keep blocked</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/ui.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/api.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/crypto.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/keystore.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/terminal.js') }}" defer></script>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}GhostLine · SOC{% endblock %}
+{% block body_class %}page-app{% endblock %}
+{% block content %}
+<header class="topbar">
+  <span class="brand">GHOST<span class="dim">LINE</span></span>
+  <span class="tag tag-solid">SOC</span>
+  <span class="stat">audit chain <b class="chain-state" id="chain-state">not verified</b></span>
+  <span class="stat">refreshed <b id="refreshed">–</b></span>
+  <nav class="topnav">
+    <a href="/terminal">Terminal</a>
+    <a href="/profile">Profile</a>
+    <button type="button" id="nav-logout">Sign out</button>
+  </nav>
+</header>
+<main class="admin-main">
+  <section class="stats" aria-label="Overview">
+    <div><span class="label">Accounts</span><b id="s-users">–</b></div>
+    <div><span class="label">Live sessions</span><b id="s-sessions">–</b></div>
+    <div><span class="label">Failed logins 24h</span><b class="warn" id="s-failed">–</b></div>
+    <div><span class="label">Denied 24h</span><b class="bad" id="s-denied">–</b></div>
+    <div><span class="label">Messages stored</span><b id="s-messages">–</b></div>
+    <div><span class="label">Audit entries</span><b id="s-audit">–</b></div>
+  </section>
+
+  <section class="card col-7">
+    <div class="pane-head"><h2 class="pane-title">Accounts</h2></div>
+    <div class="card-body"><table class="data">
+      <thead><tr><th>Handle</th><th>Role</th><th>2FA</th><th>Status</th><th>Last login</th><th></th></tr></thead>
+      <tbody id="users"></tbody>
+    </table></div>
+  </section>
+
+  <section class="card col-5">
+    <div class="pane-head"><h2 class="pane-title">Live sessions</h2></div>
+    <div class="card-body"><table class="data">
+      <thead><tr><th>Handle</th><th>IP</th><th>Last seen</th><th></th></tr></thead>
+      <tbody id="sessions"></tbody>
+    </table></div>
+  </section>
+
+  <section class="card col-12">
+    <div class="pane-head">
+      <h2 class="pane-title">Audit log · HMAC-SHA256 chain</h2>
+      <div class="row"><span class="label" id="chain-head"></span><button type="button" class="btn btn-sm" id="verify-chain">Verify chain</button></div>
+    </div>
+    <div class="card-body"><table class="data">
+      <thead><tr><th>#</th><th>Time</th><th>Actor</th><th>Action</th><th>Target</th><th>IP</th><th>Details</th><th>HMAC</th></tr></thead>
+      <tbody id="audit"></tbody>
+    </table></div>
+  </section>
+
+  <section class="card col-12">
+    <div class="pane-head"><h2 class="pane-title">Message vault · what the server actually holds</h2><span class="label">no message keys on this side</span></div>
+    <div class="card-body"><table class="data">
+      <thead><tr><th>From → To</th><th>#</th><th>Sent</th><th>Burns</th><th>IV</th><th>Ciphertext</th><th>Signature</th></tr></thead>
+      <tbody id="vault"></tbody>
+    </table></div>
+  </section>
+</main>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/ui.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/api.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/keystore.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/admin.js') }}" defer></script>
+{% endblock %}

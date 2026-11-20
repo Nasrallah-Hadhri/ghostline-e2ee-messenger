@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="770" viewBox="0 0 1120 770" font-family="Arial, Helvetica, sans-serif">
+  <rect width="1120" height="770" fill="#ffffff"/>
+  <style>
+    .title{font-size:22px;font-weight:bold;fill:#0a1f44}
+    .zone{font-size:13px;font-weight:bold;fill:#3f6ad0;letter-spacing:1px}
+    .h{font-size:15px;font-weight:bold;fill:#0a1f44}
+    .t{font-size:12px;fill:#33425e}
+    .lbl{font-size:11.5px;fill:#5a6b88;font-style:italic}
+  </style>
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#3f8cff"/></marker>
+    <marker id="ag" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#8aa0c4"/></marker>
+  </defs>
+
+  <text x="40" y="40" class="title">GhostLine — End-to-End Encrypted Messenger · Architecture</text>
+
+  <rect x="30" y="70" width="440" height="480" rx="10" fill="#f8fbff" stroke="#3f8cff" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="50" y="95" class="zone">CLIENT (browser — trusted with plaintext)</text>
+
+  <rect x="55" y="115" width="390" height="120" rx="8" fill="#eef5ff" stroke="#3f8cff" stroke-width="1.5"/>
+  <text x="70" y="138" class="h">Web Crypto key schedule</text>
+  <text x="70" y="160" class="t">passphrase → PBKDF2-SHA256 (600k) → master</text>
+  <text x="70" y="178" class="t">master → HKDF → auth_key  (sent to server)</text>
+  <text x="70" y="196" class="t">master → HKDF → wrap_key  (stays in browser)</text>
+  <text x="70" y="220" class="lbl">zero-knowledge: server never sees the passphrase</text>
+
+  <rect x="55" y="250" width="390" height="122" rx="8" fill="#eef5ff" stroke="#3f8cff" stroke-width="1.5"/>
+  <text x="70" y="273" class="h">Identity &amp; messages</text>
+  <text x="70" y="295" class="t">ECDH P-256 + ECDSA P-256 key pairs</text>
+  <text x="70" y="313" class="t">AES-256-GCM( HKDF(ECDH) ) encrypt · ECDSA sign</text>
+  <text x="70" y="331" class="t">private keys sealed under wrap_key (AES-GCM)</text>
+  <text x="70" y="356" class="lbl">non-extractable CryptoKeys kept in IndexedDB</text>
+
+  <rect x="55" y="388" width="390" height="140" rx="8" fill="#eef2f9" stroke="#8aa0c4" stroke-width="1.2"/>
+  <text x="70" y="411" class="h">User interface</text>
+  <text x="70" y="433" class="t">terminal · profile · SOC console</text>
+  <text x="70" y="451" class="t">strict CSP (no inline scripts) · CSRF header</text>
+  <text x="70" y="469" class="t">key pinning (trust on first use)</text>
+  <text x="70" y="487" class="t">safety-number verification</text>
+  <text x="70" y="511" class="lbl">decrypts &amp; verifies every message locally</text>
+
+  <text x="560" y="250" class="zone" text-anchor="middle">HTTPS</text>
+  <text x="560" y="268" class="lbl" text-anchor="middle">TLS 1.3</text>
+  <text x="560" y="286" class="lbl" text-anchor="middle">local OpenSSL CA</text>
+  <text x="560" y="372" class="zone" text-anchor="middle">SSE</text>
+  <text x="560" y="390" class="lbl" text-anchor="middle">live push</text>
+
+  <rect x="650" y="70" width="440" height="570" rx="10" fill="#fbfcfe" stroke="#8aa0c4" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="670" y="95" class="zone">SERVER (Flask — untrusted with plaintext)</text>
+
+  <rect x="675" y="115" width="390" height="118" rx="8" fill="#eef5ff" stroke="#3f8cff" stroke-width="1.5"/>
+  <text x="690" y="138" class="h">Security middleware</text>
+  <text x="690" y="160" class="t">Talisman: CSP · HSTS · X-Frame-Options</text>
+  <text x="690" y="178" class="t">CSRF · Flask-Limiter · account lockout</text>
+  <text x="690" y="196" class="t">server-side sessions (SHA-256 token hashes)</text>
+  <text x="690" y="218" class="lbl">RBAC decorators · object-level checks (404)</text>
+
+  <rect x="675" y="248" width="390" height="100" rx="8" fill="#eef5ff" stroke="#3f8cff" stroke-width="1.5"/>
+  <text x="690" y="271" class="h">Auth &amp; crypto services</text>
+  <text x="690" y="293" class="t">Argon2id(auth_key) · TOTP 2FA (AES-GCM secret)</text>
+  <text x="690" y="311" class="t">Ed25519 signs the public-key directory</text>
+  <text x="690" y="329" class="t">verifies message signatures &amp; counters</text>
+
+  <rect x="675" y="363" width="390" height="80" rx="8" fill="#eef2f9" stroke="#8aa0c4" stroke-width="1.2"/>
+  <text x="690" y="386" class="h">Audit log</text>
+  <text x="690" y="408" class="t">HMAC-SHA256 hash chain (tamper-evident)</text>
+  <text x="690" y="427" class="lbl">hmac(n) = HMAC(key, hmac(n-1) ‖ entry(n))</text>
+
+  <rect x="675" y="463" width="390" height="155" rx="8" fill="#fff6e9" stroke="#d79a2b" stroke-width="1.5"/>
+  <text x="690" y="486" class="h">SQLite (SQLAlchemy ORM)</text>
+  <text x="690" y="508" class="t">users · user_keys · sessions · conversations</text>
+  <text x="690" y="526" class="t">messages (ciphertext only) · audit_log · invites</text>
+  <text x="690" y="550" class="lbl">stores: Argon2id hashes, public JWKs,</text>
+  <text x="690" y="568" class="lbl">sealed private keys, opaque ciphertext</text>
+  <text x="690" y="592" class="lbl">never: passwords, wrap_key, message plaintext</text>
+
+  <path d="M470,172 L648,170" stroke="#3f8cff" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <path d="M648,250 L472,250" stroke="#3f8cff" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <path d="M648,372 L472,372" stroke="#8aa0c4" stroke-width="1.6" fill="none" stroke-dasharray="5 4" marker-end="url(#ag)"/>
+
+  <text x="40" y="690" class="lbl">Blue arrows = request / response over HTTPS    ·    grey dashed = server → client live events (SSE)</text>
+  <text x="40" y="712" class="lbl">Trust boundary: the browser box is trusted with plaintext; the server is trusted only with ciphertext and metadata.</text>
+</svg>

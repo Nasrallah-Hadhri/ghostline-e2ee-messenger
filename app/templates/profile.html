@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}GhostLine · Profile{% endblock %}
+{% block body_class %}page-doc{% endblock %}
+{% block content %}
+<header class="topbar">
+  <span class="brand">GHOST<span class="dim">LINE</span></span>
+  <nav class="topnav">
+    <a href="/terminal">Terminal</a>
+    <a href="/admin/" id="nav-admin" hidden>SOC</a>
+    <button type="button" id="nav-logout">Sign out</button>
+  </nav>
+</header>
+<main class="doc">
+  <h1 id="title">Profile</h1>
+  <p class="muted" id="subtitle"></p>
+  {% if request.args.get('setup2fa') %}
+  <p class="notice">Admin accounts must enable two-factor authentication before the SOC console unlocks.</p>
+  {% endif %}
+
+  <section class="section" aria-labelledby="h-identity">
+    <div><h2 id="h-identity">Identity</h2><p class="lede">Fingerprints of the public keys others see. Read them out loud to verify.</p></div>
+    <div id="identity"></div>
+  </section>
+
+  <section class="section" aria-labelledby="h-2fa">
+    <div><h2 id="h-2fa">Two-factor</h2><p class="lede">TOTP codes (RFC 6238). The secret is encrypted at rest with AES-256-GCM.</p></div>
+    <div id="twofa"></div>
+  </section>
+
+  <section class="section" aria-labelledby="h-pass">
+    <div><h2 id="h-pass">Passphrase</h2><p class="lede">Your private keys are re-sealed in this browser under the new passphrase. Other devices are signed out.</p></div>
+    <form id="pass-form" class="stack" autocomplete="off">
+      <input type="password" id="pass-current" placeholder="Current passphrase" autocomplete="current-password" aria-label="Current passphrase" required>
+      <input type="password" id="pass-new" placeholder="New passphrase (12+)" autocomplete="new-password" aria-label="New passphrase" required>
+      <input type="password" id="pass-new2" placeholder="Repeat new passphrase" autocomplete="new-password" aria-label="Repeat new passphrase" required>
+      <div class="row"><button class="btn btn-primary" type="submit">Change passphrase</button></div>
+      <pre id="pass-log" class="boot-log"></pre>
+    </form>
+  </section>
+
+  <section class="section" aria-labelledby="h-sessions">
+    <div><h2 id="h-sessions">Sessions</h2><p class="lede">Every device signed in to this account. Revoking one ends it immediately.</p></div>
+    <div class="card"><div class="card-body"><table class="data">
+      <thead><tr><th>Device</th><th>IP</th><th>Started</th><th>Last seen</th><th></th></tr></thead>
+      <tbody id="sessions"></tbody>
+    </table></div></div>
+  </section>
+</main>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/ui.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/boot.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/api.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/crypto.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/keystore.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/policy.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/profile.js') }}" defer></script>
+{% endblock %}

@@ -1,0 +1,8 @@
+GhostLine week-5 after-fixes (live HTTPS, hardened build)
+
+F-01 brute force  : 8 bad logins -> [401, 401, 401, 401, 423, 423, 423, 423]   (423 = account locked)   [FIXED]
+F-03 body size    : 400 KB body -> 413   [FIXED]
+F-10 server banner: Server=None (no Werkzeug/Python leak)   [FIXED]
+T20 headers       : CSP=True, HSTS=True, XFO=DENY, nosniff=nosniff
+
+Per-finding before/after: tests/test_findings.py was 9 xfail (week 4) -> 13 pass (week 5).

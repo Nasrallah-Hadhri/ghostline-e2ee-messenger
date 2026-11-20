@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}GhostLine · {{ code }}{% endblock %}
+{% block body_class %}page-error{% endblock %}
+{% block content %}
+<main>
+  <h1 class="error-code">{{ code }}</h1>
+  <p class="error-msg">{{ message }}</p>
+  <p><a href="{{ url_for('auth.login') }}">Back to GhostLine</a></p>
+</main>
+{% endblock %}

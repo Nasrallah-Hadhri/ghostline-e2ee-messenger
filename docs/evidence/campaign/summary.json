@@ -1,0 +1,154 @@
+{
+  "meta": {
+    "started": "2026-10-09T23:13:40",
+    "base": "https://localhost:5443",
+    "proxy": null,
+    "run": "9c36a4"
+  },
+  "results": [
+    {
+      "id": "T01",
+      "title": "SQL injection on login / directory",
+      "expected": "ORM params -> no injection",
+      "observed": "login all 401, directory 200, service up=True",
+      "verdict": "PASS",
+      "exchanges": 14
+    },
+    {
+      "id": "T02",
+      "title": "Online password guessing",
+      "expected": "lockout / 429 before 15 tries",
+      "observed": "15x bad login -> [401]; F-01 open",
+      "verdict": "FINDING",
+      "exchanges": 51
+    },
+    {
+      "id": "T03",
+      "title": "Handle enumeration (prelogin / message / timing)",
+      "expected": "no oracle",
+      "observed": "prelogin same=True, msg same=True, timing gap=2ms",
+      "verdict": "PASS",
+      "exchanges": 59
+    },
+    {
+      "id": "T04",
+      "title": "Session fixation / token rotation",
+      "expected": "new token on login",
+      "observed": "rotated=True, old token -> 401",
+      "verdict": "PASS",
+      "exchanges": 6
+    },
+    {
+      "id": "T05",
+      "title": "Cookie reuse after logout",
+      "expected": "revoked server-side -> 401",
+      "observed": "stolen cookie -> 401",
+      "verdict": "PASS",
+      "exchanges": 5
+    },
+    {
+      "id": "T06",
+      "title": "CSRF on state-changing POST",
+      "expected": "missing token -> 400",
+      "observed": "no-CSRF logout -> 400, session intact=True",
+      "verdict": "PASS",
+      "exchanges": 5
+    },
+    {
+      "id": "T07",
+      "title": "IDOR: read another pair's channel",
+      "expected": "non-participant -> 404",
+      "observed": "outsider read=404, write=404",
+      "verdict": "PASS",
+      "exchanges": 13
+    },
+    {
+      "id": "T08",
+      "title": "Vertical escalation to /admin",
+      "expected": "user -> 403",
+      "observed": "admin api=403, self-promote=403",
+      "verdict": "PASS",
+      "exchanges": 6
+    },
+    {
+      "id": "T09",
+      "title": "Mass assignment role=admin at register",
+      "expected": "field ignored",
+      "observed": "stored role=user",
+      "verdict": "PASS",
+      "exchanges": 3
+    },
+    {
+      "id": "T10",
+      "title": "Reflected/stored XSS surface",
+      "expected": "handle rejected; CSP blocks inline",
+      "observed": "handle -> 400, CSP locks scripts=True",
+      "verdict": "PASS",
+      "exchanges": 4
+    },
+    {
+      "id": "T11",
+      "title": "Forged message (bad signature) accepted by server",
+      "expected": "rejected 400",
+      "observed": "tampered envelope -> 400",
+      "verdict": "PASS",
+      "exchanges": 8
+    },
+    {
+      "id": "T12",
+      "title": "Replay a captured message (Repeater)",
+      "expected": "duplicate counter -> 409",
+      "observed": "first=201, replay=409",
+      "verdict": "PASS",
+      "exchanges": 9
+    },
+    {
+      "id": "T16",
+      "title": "Skip the 2FA step",
+      "expected": "pending session cannot act",
+      "observed": "mfa_required=True, /me=401, /terminal=302",
+      "verdict": "PASS",
+      "exchanges": 5
+    },
+    {
+      "id": "T17",
+      "title": "Unauthenticated live stream",
+      "expected": "401",
+      "observed": "anonymous /api/stream -> 401",
+      "verdict": "PASS",
+      "exchanges": 1
+    },
+    {
+      "id": "T20",
+      "title": "HTTP security headers",
+      "expected": "CSP/HSTS/XFO/nosniff present",
+      "observed": "missing: no Server banner",
+      "verdict": "FINDING",
+      "exchanges": 1
+    },
+    {
+      "id": "F-03",
+      "title": "Oversized request body",
+      "expected": "413 (currently accepted)",
+      "observed": "2 MB body -> 200",
+      "verdict": "FINDING",
+      "exchanges": 2
+    },
+    {
+      "id": "F-04",
+      "title": "Unbounded message counter",
+      "expected": "400 (currently 500)",
+      "observed": "counter 2^70 -> 500",
+      "verdict": "FINDING",
+      "exchanges": 8
+    },
+    {
+      "id": "T19",
+      "title": "Self-destruct really deletes",
+      "expected": "message gone after TTL",
+      "observed": "use --slow (waits ~40 s)",
+      "verdict": "SKIPPED",
+      "exchanges": 0
+    }
+  ]
+}

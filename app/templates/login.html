@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}GhostLine · Sign in{% endblock %}
+{% block body_class %}page-auth{% endblock %}
+{% block content %}
+<canvas id="field" aria-hidden="true"></canvas>
+<div class="auth-wrap">
+  <main class="auth-panel">
+    <h1 class="brand-lg" id="brand">GHOST<span class="dim">LINE</span></h1>
+    <p class="brand-sub">Private channels. Your passphrase never leaves this device.</p>
+
+    <form id="login-form" class="form" method="post" autocomplete="on" novalidate>
+      <label for="username" class="label">Handle</label>
+      <input id="username" name="username" type="text" autocomplete="username"
+             spellcheck="false" autocapitalize="off" maxlength="32" required autofocus>
+
+      <label for="password" class="label">Passphrase</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+      <button type="submit" class="btn btn-primary">Unlock</button>
+    </form>
+
+    <form id="mfa-form" class="form" hidden novalidate>
+      <p class="panel-title">Second factor</p>
+      <p class="muted">Enter the 6-digit code from your authenticator app.</p>
+      <div class="otp" id="otp">
+        <input inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]*" aria-label="6-digit code">
+      </div>
+      <button type="submit" class="btn btn-primary">Verify</button>
+    </form>
+
+    <pre id="boot-log" class="boot-log" aria-live="polite"></pre>
+
+    <p class="auth-switch">No identity yet? <a href="{{ url_for('auth.register') }}">Create one</a></p>
+  </main>
+</div>
+<footer class="auth-foot" aria-label="Cryptography in use">
+  <span>TLS 1.3</span><span>PBKDF2-SHA256 · 600k</span><span>Argon2id</span><span>ECDH P-256</span><span>AES-256-GCM</span><span>ECDSA</span><span>Ed25519 directory</span>
+</footer>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/ui.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/field.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/boot.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/api.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/crypto.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/keystore.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/auth.js') }}" defer></script>
+{% endblock %}

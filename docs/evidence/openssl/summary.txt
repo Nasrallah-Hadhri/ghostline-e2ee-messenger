@@ -1,0 +1,6 @@
+OpenSSL independent verification
+
+  [PASS] OpenSSL verifies message signature  (Signature Verified Successfully)
+  [PASS] OpenSSL verifies directory signature  (Signature Verified Successfully)
+  [PASS] OpenSSL reproduces audit HMAC construction  (note: actor/target are username-resolved in the API, so an exact match needs the raw row; this demonstrates the openssl mac construction)
+  [PASS] TLS from our CA, modern protocol  (TLSv1.3 / TLS_AES_256_GCM_SHA384 / verified=True)

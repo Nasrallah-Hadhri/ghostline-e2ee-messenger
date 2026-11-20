@@ -1,0 +1,22 @@
+GhostLine security test campaign - 2026-10-09T23:13:40 - target https://localhost:5443
+
+T01   PASS      SQL injection on login / directory                 login all 401, directory 200, service up=True
+T02   FINDING   Online password guessing                           15x bad login -> [401]; F-01 open
+T03   PASS      Handle enumeration (prelogin / message / timing)   prelogin same=True, msg same=True, timing gap=2ms
+T04   PASS      Session fixation / token rotation                  rotated=True, old token -> 401
+T05   PASS      Cookie reuse after logout                          stolen cookie -> 401
+T06   PASS      CSRF on state-changing POST                        no-CSRF logout -> 400, session intact=True
+T07   PASS      IDOR: read another pair's channel                  outsider read=404, write=404
+T08   PASS      Vertical escalation to /admin                      admin api=403, self-promote=403
+T09   PASS      Mass assignment role=admin at register             stored role=user
+T10   PASS      Reflected/stored XSS surface                       handle -> 400, CSP locks scripts=True
+T11   PASS      Forged message (bad signature) accepted by server  tampered envelope -> 400
+T12   PASS      Replay a captured message (Repeater)               first=201, replay=409
+T16   PASS      Skip the 2FA step                                  mfa_required=True, /me=401, /terminal=302
+T17   PASS      Unauthenticated live stream                        anonymous /api/stream -> 401
+T20   FINDING   HTTP security headers                              missing: no Server banner
+F-03  FINDING   Oversized request body                             2 MB body -> 200
+F-04  FINDING   Unbounded message counter                          counter 2^70 -> 500
+T19   SKIPPED   Self-destruct really deletes                       use --slow (waits ~40 s)
+
+PASS: 13  FINDING: 4  ACCEPTED: 0  SKIPPED: 1

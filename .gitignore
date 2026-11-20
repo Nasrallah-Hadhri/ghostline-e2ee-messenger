@@ -1,0 +1,67 @@
+# Secrets - never commit
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+certs/
+seed_credentials.txt
+
+# Runtime data
+instance/
+*.db
+*.sqlite
+*.sqlite3
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Node (slide build tooling)
+node_modules/
+
+# LaTeX build artefacts
+*.aux
+*.log
+*.toc
+*.lof
+*.lot
+*.idx
+*.ilg
+*.ind
+*.maf
+*.mtc*
+*.out
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+docs/report/latex/main.pdf
+
+# Slide build intermediates
+docs/slides/deck/static.pptx
+docs/slides/deck/png_static/
+docs/slides/deck-v1/unpacked/
+
+# Editors / OS / tools
+.claude/
+.vscode/
+.idea/
+*.swp
+*~
+~$*
+.DS_Store
+Thumbs.db
